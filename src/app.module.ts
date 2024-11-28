@@ -5,6 +5,7 @@ import { CategoriesModule } from './categories/categories.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Credentials } from './common/db/db.config';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -16,7 +17,8 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
       imports:[ConfigModule],
       inject:[ConfigService],
       useClass:Credentials
-    })
+    }),
+    AuthModule
   ],
   controllers: [],
   providers: [],
