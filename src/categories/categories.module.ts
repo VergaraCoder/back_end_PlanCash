@@ -15,7 +15,8 @@ import { FilterCategory } from './filterData/filter.category';
     FilterCategory
   ],
   exports:[
-    TypeOrmModule
+    TypeOrmModule,
+    CategoriesService
   ]
 })
 export class CategoriesModule {}

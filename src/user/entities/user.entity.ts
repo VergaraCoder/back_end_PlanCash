@@ -1,3 +1,4 @@
+import { Bill } from "src/bills/entities/bill.entity";
 import { Budget } from "src/budget/entities/budget.entity";
 import { Category } from "src/categories/entities/category.entity";
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";

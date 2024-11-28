@@ -1,5 +1,7 @@
+import { Bill } from "src/bills/entities/bill.entity";
+import { Budget } from "src/budget/entities/budget.entity";
 import { User } from "src/user/entities/user.entity";
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity("categories")
 export class Category {
@@ -10,7 +12,7 @@ export class Category {
     name:string;
 
     @Column()
-    idUser:number;
+    idBudget:number;
 
     @Column()
     dateStart:Date;
@@ -21,6 +23,9 @@ export class Category {
     @Column()
     amount:number;
 
-    @ManyToOne(()=>User,user=>user.category)
-    user:User;
+    @ManyToOne(()=>Budget,budget=>budget.category,{eager:true})
+    budget:Budget;
+
+    @OneToMany(()=>Bill,bill=>bill.category)
+    bill:Bill[];
 }
