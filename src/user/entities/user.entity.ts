@@ -17,9 +17,6 @@ export class User {
     @Column()
     password:string;
 
-    @OneToMany(()=>Category,category=>category.user)
-    category:Category[];
-
     @OneToMany(()=>Budget,budget=>budget.user)
     budGet:Budget[];
 }

@@ -14,12 +14,28 @@ export class CategoriesService {
     private categoryRepository: Repository<Category>
   ){}
 
-  create(createCategoryDto: CreateCategoryDto) {
-    return 'This action adds a new category';
+  async create(createCategoryDto: CreateCategoryDto) {
+    try{
+      const category = await this.categoryRepository.create(createCategoryDto);
+      await this.categoryRepository.save(category);
+      return category;
+    }catch(err:any){
+      throw err;
+    }
   }
 
-  findAll() {
-    return `This action returns all categories`;
+  async findAll() {
+    try{
+      const categorys:Category[] | null= await this.categoryRepository.find();
+      if(categorys.length==0){
+        throw new ManageError({
+          type:"NOT_FOUND",
+          message:"THERE ARE NOT CATEGORIES"});
+      }
+      return categorys;
+    }catch(err:any){
+      throw ManageError.signedError(err.message);
+    }
   }
 
   async findOne(id: number) {
@@ -36,11 +52,31 @@ export class CategoriesService {
     }
   }
 
-  update(id: number, updateCategoryDto: UpdateCategoryDto) {
-    return `This action updates a #${id} category`;
+  async update(id: number, updateCategoryDto: UpdateCategoryDto) {
+    try{
+      const {affected}= await this.categoryRepository.update(id,updateCategoryDto);
+      if(affected==0){
+        throw new ManageError({
+          type:"NOT_FOUND",
+          message:"FAILED TO UPDATED"});
+      }
+      return "Perfectly updated";
+    }catch(err:any){
+      throw ManageError.signedError(err.message);
+    }
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} category`;
+  async remove(id: number) {
+    try{
+      const {affected}= await this.categoryRepository.delete(id);
+      if(affected==0){
+        throw new ManageError({
+          type:"NOT_FOUND",
+          message:"FAILED TO DELETED"});
+      }
+      return "Perfectly deleted";
+    }catch(err:any){
+      throw ManageError.signedError(err.message);
+    }
   }
 }
