@@ -13,7 +13,13 @@ export class Category {
     idUser:number;
 
     @Column()
-    dateCreation:Date;
+    dateStart:Date;
+
+    @Column()
+    dateEnd:Date;
+
+    @Column()
+    amount:number;
 
     @ManyToOne(()=>User,user=>user.category)
     user:User;

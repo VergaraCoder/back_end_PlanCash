@@ -7,13 +7,10 @@ export class Budget {
     id:number;
 
     @Column()
-    dateStart:Date;
-
-    @Column()
-    dateEnd:Date;
-
-    @Column()
     idUser:number;
+
+    @Column()
+    generalAmount:number;
 
     @ManyToOne(()=>User,user=>user.budGet)
     user:User;
