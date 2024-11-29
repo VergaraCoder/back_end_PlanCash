@@ -6,6 +6,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Category } from './entities/category.entity';
 import { Repository } from 'typeorm';
 import { BudgetService } from 'src/budget/budget.service';
+import { Budget } from 'src/budget/entities/budget.entity';
 
 @Injectable()
 export class CategoriesService {
@@ -20,7 +21,10 @@ export class CategoriesService {
     try{
       const category:Category = this.categoryRepository.create(createCategoryDto);
       await this.categoryRepository.save(category);
-      await this.budGetService.update(createCategoryDto.idBudget,{generalAmount:createCategoryDto.amount});
+      
+      const generalBudGet:Budget=await this.budGetService.findOne(createCategoryDto.idBudget);
+
+      await this.budGetService.update(createCategoryDto.idBudget,{generalAmount:generalBudGet.generalAmount-createCategoryDto.amount});
       return category;
     }catch(err:any){
       throw err;

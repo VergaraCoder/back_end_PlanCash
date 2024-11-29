@@ -35,10 +35,7 @@ export class FilterCategories{
 
             console.log(DateStart);
             console.log(DateEnd);
-            
-
-            console.log(oneMounth !== (totalDate-operationToOneDay) );
-            console.log(oneMounth !== (totalDate+operationToOneDay) );
+        
             
             if(oneMounth !== totalDate){
 
