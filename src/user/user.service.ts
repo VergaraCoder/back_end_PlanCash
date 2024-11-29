@@ -130,6 +130,8 @@ export class UserService {
           message:"INCORRECT CREDENTIALS"
         });
       }
+      console.log("PASSS");
+      
       return findUser;
     }catch(err:any){
   

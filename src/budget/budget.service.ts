@@ -1,8 +1,8 @@
+import { Budget } from 'src/budget/entities/budget.entity';
 import { Injectable } from '@nestjs/common';
 import { CreateBudgetDto } from './dto/create-budget.dto';
 import { UpdateBudgetDto } from './dto/update-budget.dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Budget } from './entities/budget.entity';
 import { Repository } from 'typeorm';
 import { ManageError } from 'src/common/errors/custom/error.custom';
 
@@ -22,7 +22,9 @@ export class BudgetService {
 
   async create(createBudgetDto:any ) {
     try{
-
+      const dataBudget:Budget[]= this.budgetRepository.create(createBudgetDto);
+      await this.budgetRepository.save(dataBudget);
+      return dataBudget;
 
     }catch(err:any){
       throw ManageError.signedError(err.message);

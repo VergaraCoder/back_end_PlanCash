@@ -14,6 +14,8 @@ export class FilterError implements ExceptionFilter{
         let message;
         let status;   
             
+        console.log(exception);
+        
     
         if(ifExist2 && ifExist2.message){
             message=ifExist2.message;

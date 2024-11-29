@@ -3,12 +3,18 @@ import { BudgetService } from './budget.service';
 import { BudgetController } from './budget.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Budget } from './entities/budget.entity';
+import { AuthModule } from 'src/auth/auth.module';
 
 @Module({
   imports:[
-    TypeOrmModule.forFeature([Budget])
+    TypeOrmModule.forFeature([Budget]),
+    AuthModule
   ],
   controllers: [BudgetController],
   providers: [BudgetService],
+  exports:[
+    TypeOrmModule,
+    BudgetService
+  ]
 })
 export class BudgetModule {}

@@ -1,15 +1,26 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Req, UseGuards } from '@nestjs/common';
 import { BudgetService } from './budget.service';
 import { CreateBudgetDto } from './dto/create-budget.dto';
 import { UpdateBudgetDto } from './dto/update-budget.dto';
+import { Request } from 'express';
+import { JwtGuard } from 'src/auth/guard/jwt.guard';
+
+
+interface PayloadToken{
+  userId:number;
+  email:string;
+}
+
 
 @Controller('budget')
 export class BudgetController {
   constructor(private readonly budgetService: BudgetService) {}
 
+  @UseGuards(JwtGuard)
   @Post()
-  create(@Body() createBudgetDto: CreateBudgetDto) {
-    return this.budgetService.create(createBudgetDto);
+  create(@Body() createBudgetDto: CreateBudgetDto, @Req() request: Request) {
+    const payloadToken:PayloadToken=request["user"] as PayloadToken;    
+    return this.budgetService.create({...createBudgetDto,idUser:payloadToken.userId });
   }
 
   @Get()

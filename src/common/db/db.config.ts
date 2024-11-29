@@ -1,6 +1,10 @@
 import { Injectable } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { TypeOrmModuleOptions, TypeOrmOptionsFactory } from "@nestjs/typeorm";
+import { Bill } from "src/bills/entities/bill.entity";
+import { Budget } from "src/budget/entities/budget.entity";
+import { Category } from "src/categories/entities/category.entity";
+import { User } from "src/user/entities/user.entity";
 
 
 
@@ -21,7 +25,7 @@ export class Credentials implements TypeOrmOptionsFactory{
             password: this.configService.get<string>('DB_PASSWORD'),
             database: this.configService.get<string>('DB_DATABASE'),
             entities: [
-               
+               Category,User,Budget,Bill
             ],
             synchronize: true,
         });

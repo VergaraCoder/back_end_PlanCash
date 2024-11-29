@@ -5,19 +5,22 @@ import { ManageError } from 'src/common/errors/custom/error.custom';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Category } from './entities/category.entity';
 import { Repository } from 'typeorm';
+import { BudgetService } from 'src/budget/budget.service';
 
 @Injectable()
 export class CategoriesService {
 
   constructor(
     @InjectRepository(Category)
-    private categoryRepository: Repository<Category>
+    private categoryRepository: Repository<Category>,
+    private budGetService:BudgetService
   ){}
 
   async create(createCategoryDto: CreateCategoryDto) {
     try{
-      const category = await this.categoryRepository.create(createCategoryDto);
+      const category:Category = this.categoryRepository.create(createCategoryDto);
       await this.categoryRepository.save(category);
+      await this.budGetService.update(createCategoryDto.idBudget,{generalAmount:createCategoryDto.amount});
       return category;
     }catch(err:any){
       throw err;
