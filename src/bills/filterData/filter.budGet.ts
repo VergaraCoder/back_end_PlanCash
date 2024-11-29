@@ -7,6 +7,7 @@ interface argumentsFilterBills{
     userId:number;
     categoryId:number;
     amount:number;
+
 }
 
 
@@ -16,19 +17,26 @@ export class FilterBillService{
         private categoryService:CategoriesService,
     ){}
 
-    async filterData(data:argumentsFilterBills):Promise<Boolean>{
+    async filterDataGeneral(data:argumentsFilterBills):Promise<boolean>{
         try{
-            const findCategory:Category = await this.categoryService.findOne(data.categoryId);
+            await this.VerifyCategory(data.categoryId,data.userId);
+            return true;
+        }catch(err:any){
+            throw ManageError.signedError(err.message);
+        }
+    }
 
-            if(findCategory.budget.user.id !== data.userId){
+    private async VerifyCategory(categoryId:number,userId:number):Promise<Boolean>{
+        try{
+            const findCategory:Category = await this.categoryService.findOne(categoryId);
+
+            if(findCategory.budget.user.id !== userId){
                 throw new ManageError({
                     type:"CONFLICT",
                     message:"THIS CATEGORY IS NOT THAT USER"
                 });
             }
-
             return true;
-
         }catch(err:any){
             throw ManageError.signedError(err.message);
         }

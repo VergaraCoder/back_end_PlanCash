@@ -7,6 +7,13 @@ import { request } from 'http';
 import { Request } from 'express';
 import { FilterBillService } from './filterData/filter.budGet';
 
+
+export interface argumentsFilterBills{
+  userId:number;
+  categoryId:number;
+  amount:number;
+}
+
 @Controller('bills')
 export class BillsController {
   constructor(
@@ -18,10 +25,12 @@ export class BillsController {
   @Post()
   async create(@Req() request:Request, @Body()createBillDto:CreateBillDto) {
     const dataBills:any=request["user"];
-    
-    await this.filterBillService.filterData(dataBills.id);
 
-    return this.billsService.create({...createBillDto,userId:dataBills.id});
+    const data:argumentsFilterBills={...createBillDto,userId:dataBills.id};
+
+    await this.filterBillService.filterDataGeneral(data);
+
+    return this.billsService.create(data);
   }
 
   @Get()
