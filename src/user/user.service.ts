@@ -18,6 +18,10 @@ export class UserService {
   async create(createUserDto: CreateUserDto) {
     try{
 
+      console.log("THE DATAIS ");
+  
+      console.log(createUserDto);
+      
       const hashedPassword=bcrypt.hashSync(createUserDto.password,10);
 
       createUserDto.password=hashedPassword;
@@ -130,8 +134,7 @@ export class UserService {
           message:"INCORRECT CREDENTIALS"
         });
       }
-      console.log("PASSS");
-      
+            
       return findUser;
     }catch(err:any){
   
