@@ -29,8 +29,9 @@ export class BudgetController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.budgetService.findOne(+id);
+  findOne(@Param('id') id: string,@Req() request:Request) {
+    const dataUser:any=request["user"];
+    return this.budgetService.findOne(dataUser.id);
   }
 
   @Patch(':id')

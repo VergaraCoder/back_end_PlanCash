@@ -21,7 +21,8 @@ export class JwtGuard implements CanActivate{
         const response:Response=context.switchToHttp().getResponse();
 
         const signedCookies=request.signedCookies;
-
+        console.log(signedCookies);
+        
         
         try{
             if(!signedCookies || !signedCookies["acces_token"] || !signedCookies["refresh_token"]){

@@ -1,9 +1,10 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Req } from '@nestjs/common';
 import { CategoriesService } from './categories.service';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
 import { JwtGuard } from 'src/auth/guard/jwt.guard';
 import { FilterCategories } from './filterData/filter.budGet';
+import { Request } from 'express';
 
 @Controller('categories')
 export class CategoriesController {
@@ -28,9 +29,21 @@ export class CategoriesController {
 
 
   @UseGuards(JwtGuard)
+  @Get('all')
+  findAllById( @Req() request:Request) {
+    const dataUser:any=request["user"];
+    console.log(dataUser);
+    return this.categoriesService.findAllById(dataUser.id);
+  }
+
+
+  @UseGuards(JwtGuard)
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.categoriesService.findOne(+id);
+  findOne(@Param('id') id: string, @Req() request:Request) {
+    const dataUser:any=request["user"];
+    console.log(dataUser);
+    
+    return this.categoriesService.findOne(dataUser.id);
   }
 
 

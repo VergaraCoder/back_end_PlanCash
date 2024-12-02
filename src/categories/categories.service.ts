@@ -22,7 +22,14 @@ export class CategoriesService {
       const category:Category = this.categoryRepository.create(createCategoryDto);
       await this.categoryRepository.save(category);
       
-      const generalBudGet:Budget=await this.budGetService.findOne(createCategoryDto.idBudget);
+      const generalBudGet:any=await this.budGetService.findOne(createCategoryDto.idBudget);
+
+      if(generalBudGet.generalAmount < createCategoryDto.amount){
+        throw new ManageError({
+          type:"CONFLICT",
+          message:"El presupuesto destinado para la categoria excede el presupuesto general"
+        });
+      }
 
       await this.budGetService.update(createCategoryDto.idBudget,{generalAmount:generalBudGet.generalAmount-createCategoryDto.amount});
       return category;
@@ -44,6 +51,17 @@ export class CategoriesService {
       throw ManageError.signedError(err.message);
     }
   }
+
+
+  async findAllById(id:number) {
+    try{
+      const categorys:Category[] | null= await this.categoryRepository.findBy({id});
+      return categorys;
+    }catch(err:any){
+      throw ManageError.signedError(err.message);
+    }
+  }
+
 
   async findOne(id: number) {
     try{

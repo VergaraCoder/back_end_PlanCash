@@ -26,6 +26,8 @@ export class AuthController {
       httpOnly:true
     });
 
+    console.log(tokens);
+    
     response.status(200).json("Tokens creates");
   }
 }

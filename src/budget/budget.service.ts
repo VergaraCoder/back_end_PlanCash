@@ -48,13 +48,9 @@ export class BudgetService {
 
   async findOne(id: number) {
     try{
-
       const budget:Budget | null= await this.budgetRepository.findOneBy({id});
       if(!budget){
-        throw new ManageError({
-          type:"NOT_FOUND",
-          message:"THIS ID NOT EXIST"
-        });
+        return 0;
       }
       return budget;
     }catch(err:any){

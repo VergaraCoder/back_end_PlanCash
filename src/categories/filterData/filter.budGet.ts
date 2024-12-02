@@ -24,26 +24,47 @@ export class FilterCategories{
     async filterDate(dateStart:Date, dateEnd:Date):Promise<boolean>{
         try{
 
-            const operationToOneDay= 1000*60*60*24;
-
             const oneMounth:number=1000*60*60*24*30;
+            const oneDay:number= 1000*60*60*24;
+
+            const currentDate= new Date();
+
+            currentDate.setUTCHours(0,0,0,0);
 
             const DateStart:Date=new Date(dateStart);
-            const DateEnd:Date=new Date(dateEnd);
+            const DateEnd:Date=new Date(dateEnd);       
 
-            const totalDate:number=DateEnd.getTime()-DateStart.getTime();
+            let totalDate:number=DateEnd.getTime()-DateStart.getTime();
 
-            console.log(DateStart);
-            console.log(DateEnd);
-        
+            if(DateStart.getFullYear()  !== DateEnd.getFullYear()){
+                totalDate-=oneDay
+            }
+
+            
+            
             
             if(oneMounth !== totalDate){
 
                 throw new ManageError({
                     type:"CONFLICT",
-                    message:"THE DATE MUST BE EXACTLY ONE MOUNTH"
+                    message:"LAS FECHAS DEBEN TENER UN PLAZO TOTAL DE UN MES"
                 });
             }
+            console.log(DateEnd < DateStart);
+            console.log( DateStart< currentDate);
+
+            console.log(DateStart);
+            console.log(currentDate);
+            
+            
+            
+            if(DateEnd < DateStart || DateStart< currentDate)
+            {
+                throw new ManageError({
+                    type:"CONFLICT",
+                    message:"ENVIA TODOS LOS DATOS CORRECTAMENTE, LAS FECHAS NO SON VALIDAS"
+                });
+             }
 
             return true;
         }catch(err:any){
