@@ -31,7 +31,7 @@ export class BudgetController {
   @Get(':id')
   findOne(@Param('id') id: string,@Req() request:Request) {
     const dataUser:any=request["user"];
-    return this.budgetService.findOne(dataUser.id);
+    return this.budgetService.findOne(dataUser.userId);
   }
 
   @Patch(':id')

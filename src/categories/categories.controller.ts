@@ -39,11 +39,8 @@ export class CategoriesController {
 
   @UseGuards(JwtGuard)
   @Get(':id')
-  findOne(@Param('id') id: string, @Req() request:Request) {
-    const dataUser:any=request["user"];
-    console.log(dataUser);
-    
-    return this.categoriesService.findOne(dataUser.id);
+  findOne(@Param('id') id: string) {
+      return this.categoriesService.findOne(+id);
   }
 
 

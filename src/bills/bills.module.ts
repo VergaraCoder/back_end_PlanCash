@@ -7,13 +7,15 @@ import { UserModule } from 'src/user/user.module';
 import { AuthModule } from 'src/auth/auth.module';
 import { FilterBillService } from './filterData/filter.budGet';
 import { CategoriesModule } from 'src/categories/categories.module';
+import { BudgetModule } from 'src/budget/budget.module';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([Bill]),
     UserModule,
     AuthModule,
-    CategoriesModule
+    CategoriesModule,
+    BudgetModule
   ],
   controllers: [BillsController],
   providers: [

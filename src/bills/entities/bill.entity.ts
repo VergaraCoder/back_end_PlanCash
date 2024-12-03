@@ -11,12 +11,18 @@ export class Bill {
     date:Date;
 
     @Column()
+    purchaseName:string;
+
+    @Column()
     categoryId:number;
 
     @Column()
-    amount:number;
+    description:string;
 
-    @ManyToOne(()=>Category,category=>category.bill)
+    @Column()
+    value:number;
+
+    @ManyToOne(()=>Category,category=>category.bill,{eager:true})
     category:Category;
 }
 

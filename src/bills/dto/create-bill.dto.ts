@@ -7,9 +7,6 @@ export class CreateBillDto {
 
     @IsNotEmpty()
     @IsNumber()
-    amount:number;
+    value:number;
 
-    @IsNotEmpty()
-    @IsNumber()
-    userId:number;
 }

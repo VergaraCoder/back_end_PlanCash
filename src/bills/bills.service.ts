@@ -5,19 +5,28 @@ import { Bill } from './entities/bill.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { ManageError } from 'src/common/errors/custom/error.custom';
+import { CategoriesService } from 'src/categories/categories.service';
 
 @Injectable()
 export class BillsService {
 
   constructor(
     @InjectRepository(Bill)
-    private billRepository: Repository<Bill>
+    private billRepository: Repository<Bill>,
+    private categoryService: CategoriesService
   ){}
 
   async create(createBillDto: CreateBillDto) {
     try{
       const date:Date=new Date();
       const dataBill=this.billRepository.create({...createBillDto,date});
+
+      const category= await this.categoryService.findOne(createBillDto.categoryId);
+
+      const updateAmount= category.amount - createBillDto.value;
+
+      await this.categoryService.update(createBillDto.categoryId,{amount:updateAmount});
+
       await this.billRepository.save(dataBill);
       return dataBill;
     }catch(err:any){

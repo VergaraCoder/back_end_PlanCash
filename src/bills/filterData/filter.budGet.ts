@@ -2,11 +2,13 @@ import { Injectable } from "@nestjs/common";
 import { ManageError } from "src/common/errors/custom/error.custom";
 import { CategoriesService } from "src/categories/categories.service";
 import { Category } from "src/categories/entities/category.entity";
+import { BudgetService } from "src/budget/budget.service";
+import { Budget } from "src/budget/entities/budget.entity";
 
 interface argumentsFilterBills{
     userId:number;
     categoryId:number;
-    amount:number;
+    value:number;
 
 }
 
@@ -15,6 +17,7 @@ interface argumentsFilterBills{
 export class FilterBillService{
     constructor(
         private categoryService:CategoriesService,
+        private budGetService:BudgetService
     ){}
 
     async filterDataGeneral(data:argumentsFilterBills):Promise<boolean>{
@@ -29,8 +32,16 @@ export class FilterBillService{
     private async VerifyCategory(categoryId:number,userId:number):Promise<Boolean>{
         try{
             const findCategory:Category = await this.categoryService.findOne(categoryId);
+            
+            const findBudGet:Budget | any= await this.budGetService.findOne(findCategory.idBudget);
 
-            if(findCategory.budget.user.id !== userId){
+            console.log(findCategory);
+            
+
+            console.log(findBudGet);
+            
+            
+            if(findBudGet.idUser !== userId){
                 throw new ManageError({
                     type:"CONFLICT",
                     message:"THIS CATEGORY IS NOT THAT USER"

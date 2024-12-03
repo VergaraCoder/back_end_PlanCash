@@ -11,7 +11,7 @@ import { FilterBillService } from './filterData/filter.budGet';
 export interface argumentsFilterBills{
   userId:number;
   categoryId:number;
-  amount:number;
+  value:number;
 }
 
 @Controller('bills')
@@ -25,8 +25,13 @@ export class BillsController {
   @Post()
   async create(@Req() request:Request, @Body()createBillDto:CreateBillDto) {
     const dataBills:any=request["user"];
-
-    const data:argumentsFilterBills={...createBillDto,userId:dataBills.id};
+    console.log("the ata user iis");
+    
+    console.log(dataBills);
+    
+    
+    const data:argumentsFilterBills={...createBillDto,userId:dataBills.userId};
+    console.log(data);
 
     await this.filterBillService.filterDataGeneral(data);
 
