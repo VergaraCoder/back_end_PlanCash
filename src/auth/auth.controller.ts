@@ -16,17 +16,17 @@ export class AuthController {
     const data:any=request["user"];
     const tokens=await this.authService.creationOfToken(data);
     response.cookie("acces_token",tokens.acces_token,{
-      signed:true,
-      httpOnly:true,      
-      secure: false,  
-      sameSite: 'lax',
+      signed: true,
+      httpOnly: true,      
+      secure: true,
+      sameSite: 'none',
     });
 
     response.cookie("refresh_token",tokens.refresh_token,{
-      signed:true,
-      httpOnly:true,      
-      secure: false,  
-      sameSite: 'lax',
+      signed: true,
+  httpOnly: true,      
+  secure: true,
+  sameSite: 'none',
     });
 
     
