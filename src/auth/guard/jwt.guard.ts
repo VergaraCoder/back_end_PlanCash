@@ -22,6 +22,8 @@ export class JwtGuard implements CanActivate{
 
         const signedCookies=request.signedCookies;
         
+        console.log("THE TOKENS ARE ");
+        console.log(signedCookies);
         
         try{
             if(!signedCookies || !signedCookies["acces_token"] || !signedCookies["refresh_token"]){
