@@ -10,7 +10,6 @@ import { FilterBillService } from './filterData/filter.budGet';
 
 export interface argumentsFilterBills{
   userId:number;
-  categoryId:number;
   value:number;
 }
 
@@ -23,24 +22,25 @@ export class BillsController {
 
   @UseGuards(JwtGuard)
   @Post()
-  async create(@Req() request:Request, @Body()createBillDto:CreateBillDto) {
+  async create(@Req() request:Request, @Body()createBillDto:CreateBillDto[]) {
     const dataBills:any=request["user"];
-    console.log("the ata user iis");
-    
-    console.log(dataBills);
-    
-    
-    const data:argumentsFilterBills={...createBillDto,userId:dataBills.userId};
-    console.log(data);
+  
+    // const data:argumentsFilterBills={userId:dataBills.userId};
+    const infoToFilter=createBillDto[0];
 
-    await this.filterBillService.filterDataGeneral(data);
+    await this.filterBillService.filterDataGeneral({userId:dataBills.userId,categoryId:infoToFilter.categoryId,});
 
-    return this.billsService.create(data);
+    return this.billsService.createAll(createBillDto);
   }
 
-  @Get()
-  findAll() {
-    return this.billsService.findAll();
+  @UseGuards(JwtGuard)
+  @Get("all")
+  findAll(@Req() request:Request) {
+    const idUser:any= request["user"];
+    console.log("el id");
+    console.log();
+    
+    return this.billsService.findAll(idUser.userId);
   }
 
   @Get(':id')

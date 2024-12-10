@@ -1,12 +1,19 @@
-import { IsNotEmpty, IsNumber } from "class-validator";
+import { IsNotEmpty, IsNumber, IsOptional, IsString } from "class-validator";
 
 export class CreateBillDto {
-    @IsNotEmpty()
+    @IsOptional()
     @IsNumber()
-    categoryId:number;
+    categoryId?:number;
 
-    @IsNotEmpty()
+    @IsOptional()
     @IsNumber()
-    value:number;
+    value?:number;
 
+    @IsOptional()
+    @IsString()
+    date?:string;
+
+    @IsOptional()
+    @IsNumber()
+    userId?:number;
 }

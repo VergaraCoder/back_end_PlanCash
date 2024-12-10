@@ -1,10 +1,10 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Req } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Req, Res } from '@nestjs/common';
 import { CategoriesService } from './categories.service';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
 import { JwtGuard } from 'src/auth/guard/jwt.guard';
 import { FilterCategories } from './filterData/filter.budGet';
-import { Request } from 'express';
+import { Request, Response } from 'express';
 
 @Controller('categories')
 export class CategoriesController {
@@ -16,6 +16,10 @@ export class CategoriesController {
   @UseGuards(JwtGuard)
   @Post()
   async create(@Body() createCategoryDto: CreateCategoryDto) {
+    console.log("ENTER ");
+    console.log(createCategoryDto);
+    
+    
     await this.FilterDataCategories.filterDataGeneral({dateStart: createCategoryDto.dateStart, dateEnd: createCategoryDto.dateEnd});
     return this.categoriesService.create(createCategoryDto);
   }
@@ -43,14 +47,20 @@ export class CategoriesController {
       return this.categoriesService.findOne(+id);
   }
 
+  @UseGuards(JwtGuard)
+  @Patch('final/:id')
+  updateFnal(@Param('id') id: string, @Body() updateCategoryDto: UpdateCategoryDto, @Res() response : Response) {
+    const responseData=this.categoriesService.update(+id, updateCategoryDto);
+
+    response.cookie("access_token","");
+    response.cookie("refresh_token","");
+  }
 
   @UseGuards(JwtGuard)
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateCategoryDto: UpdateCategoryDto) {
     return this.categoriesService.update(+id, updateCategoryDto);
   }
-
-
 
   @UseGuards(JwtGuard)
   @Delete(':id')

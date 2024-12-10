@@ -8,8 +8,6 @@ import { Budget } from "src/budget/entities/budget.entity";
 interface argumentsFilterBills{
     userId:number;
     categoryId:number;
-    value:number;
-
 }
 
 
@@ -31,9 +29,12 @@ export class FilterBillService{
 
     private async VerifyCategory(categoryId:number,userId:number):Promise<Boolean>{
         try{
+            console.log("THE ID USER IS");
+            console.log(userId);
+            
             const findCategory:Category = await this.categoryService.findOne(categoryId);
             
-            const findBudGet:Budget | any= await this.budGetService.findOne(findCategory.idBudget);
+            const findBudGet:Budget | any= await this.budGetService.findOneByIdBudget(findCategory.idBudget);
 
             console.log(findCategory);
             

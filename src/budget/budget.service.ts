@@ -20,8 +20,12 @@ export class BudgetService {
     private readonly budgetRepository: Repository<Budget>
   ){}
 
-  async create(createBudgetDto:any ) {
+  async createBudGet(createBudgetDto:any ) {
     try{
+      const findOneBudGet= await this.budgetRepository.findOneBy({idUser:createBudgetDto.idUser});
+      
+
+
       const dataBudget:Budget[]= this.budgetRepository.create(createBudgetDto);
       await this.budgetRepository.save(dataBudget);
       return dataBudget;
@@ -46,17 +50,34 @@ export class BudgetService {
     }
   }
 
-  async findOne(id: number) {
+  async findOneByIdUser(id: number) {
     try{
-      const budget:Budget | null= await this.budgetRepository.findOneBy({id});
+      const budget:Budget | null= await this.budgetRepository.findOneBy({idUser:id});
       if(!budget){
-        return 0;
+        return await this.createBudGet({idUser:id, generalAmount:0});
       }
       return budget;
     }catch(err:any){
       throw ManageError.signedError(err.message);
     }
   }
+
+  
+  async findOneByIdBudget(id: number) {
+    try{
+      const budget:Budget | null= await this.budgetRepository.findOneBy({id});
+      if(!budget){
+        throw new ManageError({
+          type:"NOT_FOUND",
+          message:"EL MONTO GENERAL NO EXISTE"
+        });
+      }
+      return budget;
+    }catch(err:any){
+      throw ManageError.signedError(err.message);
+    }
+  }
+
 
   async update(id: number, updateBudgetDto: UpdateBudgetDto) {
     try{

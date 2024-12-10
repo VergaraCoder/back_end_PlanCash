@@ -32,6 +32,9 @@ export class FilterError implements ExceptionFilter{
             status=500;
         }
 
+        console.log(message);
+        console.log(status);
+        
         response.status(status).json({
             statusCode: status,
             timestamp: new Date().toISOString(),

@@ -12,7 +12,6 @@ export class AuthController {
   @Post("login")
   @UseGuards(LocalGuard)
   async createToken(@Body() dataBody:CreateAuthDto , @Req() request:Request, @Res()response:Response) { 
-    console.log("enter");
     
     const data:any=request["user"];
     const tokens=await this.authService.creationOfToken(data);
@@ -26,7 +25,6 @@ export class AuthController {
       httpOnly:true
     });
 
-    console.log(tokens);
     
     response.status(200).json("Tokens creates");
   }

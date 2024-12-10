@@ -19,10 +19,14 @@ export class CategoriesService {
 
   async create(createCategoryDto: CreateCategoryDto) {
     try{
-      const category:Category = this.categoryRepository.create(createCategoryDto);
-      await this.categoryRepository.save(category);
+      console.log("ENTER TO CREATE");
+      console.log(createCategoryDto);
       
-      const generalBudGet:any=await this.budGetService.findOne(createCategoryDto.idBudget);
+      const generalBudGet:any=await this.budGetService.findOneByIdBudget
+      (createCategoryDto.idBudget);
+
+      console.log(generalBudGet);
+      
 
       if(generalBudGet.generalAmount < createCategoryDto.amount){
         throw new ManageError({
@@ -31,10 +35,16 @@ export class CategoriesService {
         });
       }
 
-      await this.budGetService.update(createCategoryDto.idBudget,{generalAmount:generalBudGet.generalAmount-createCategoryDto.amount});
+      
+      const category:Category = this.categoryRepository.create(createCategoryDto);
+      await this.categoryRepository.save(category);
+
+      await this.budGetService.update(createCategoryDto.idBudget,
+      {generalAmount:generalBudGet.generalAmount-createCategoryDto.amount});
+
       return category;
     }catch(err:any){
-      throw err;
+      throw ManageError.signedError(err.message);
     }
   }
 
@@ -79,13 +89,22 @@ export class CategoriesService {
 
   async update(id: number, updateCategoryDto: UpdateCategoryDto) {
     try{
+      console.log(
+      "ENTER TO UPDATEDDDDDDDDDDDDDDDDD"
+      );
+
+      console.log(id);
+      console.log(updateCategoryDto);
+      
+      
+      
       const {affected}= await this.categoryRepository.update(id,updateCategoryDto);
       if(affected==0){
         throw new ManageError({
           type:"NOT_FOUND",
           message:"FAILED TO UPDATED"});
       }
-      return "Perfectly updated";
+      return {message:"Perfectly updated"};
     }catch(err:any){
       throw ManageError.signedError(err.message);
     }

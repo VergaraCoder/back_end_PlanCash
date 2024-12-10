@@ -34,15 +34,49 @@ export class BillsService {
     }
   }
 
-  async findAll() {
+
+  async createAll(createBillDto: CreateBillDto[]) {
     try{
-      const bills:Bill[] | null= await this.billRepository.find();
-      if(bills.length==0){
+      const dataBill=this.billRepository.create(createBillDto);
+
+      console.log(dataBill);
+      
+
+      for(const x of createBillDto){
+            
+          const category= await this.categoryService.findOne(x.categoryId);
+        console.log(category);
+        
+          const updateAmount= category.amount - x.value;
+
+          await this.categoryService.update(x.categoryId,{amount:updateAmount});
+      }
+
+      await this.billRepository.save(dataBill);
+      return dataBill;
+    }catch(err:any){
+      throw err;
+    }
+  }
+
+
+  async findAll(idUser:number) {  // Este tiene el un categoryId
+    try{
+      const queryBuider= this.billRepository.createQueryBuilder('bills')
+
+      // INNER JOIN entre bills y categories
+      .innerJoin('categories', 'categories', 'categories.id = bills.categoryId') 
+      .innerJoin('budgets', 'budgets', 'budgets.id = categories.idBudget')
+      .where('budgets.idUser = :user', { user: idUser })
+
+    const data = await queryBuider.getMany();
+      if(data.length==0){
         throw new ManageError({
           type:"NOT_FOUND",
-          message:"THERE ARE NOT BILLS"});
+          message:"No se encontraron facturas para el usuario"
+        });
       }
-      return bills; 
+      return data;
     }catch(err:any){
       throw ManageError.signedError(err.message);
     }

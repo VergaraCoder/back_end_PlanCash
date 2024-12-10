@@ -37,10 +37,12 @@ export class FilterCategories{
             let totalDate:number=DateEnd.getTime()-DateStart.getTime();
 
             if(DateStart.getFullYear()  !== DateEnd.getFullYear()){
+                console.log("entramos a crear un nuevo date");
+                
                 totalDate-=oneDay
-            }
-
-            
+            }       
+            console.log(totalDate);
+            console.log(oneMounth);
             
             
             if(oneMounth !== totalDate){
