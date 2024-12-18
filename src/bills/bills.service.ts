@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { CreateBillDto } from './dto/create-bill.dto';
 import { UpdateBillDto } from './dto/update-bill.dto';
 import { Bill } from './entities/bill.entity';
@@ -13,7 +13,8 @@ export class BillsService {
   constructor(
     @InjectRepository(Bill)
     private billRepository: Repository<Bill>,
-    private categoryService: CategoriesService
+    @Inject(forwardRef(() => CategoriesService)) // Solucionar la dependencia circular
+    private categoryService: CategoriesService,
   ){}
 
   async create(createBillDto: CreateBillDto) {
@@ -35,25 +36,34 @@ export class BillsService {
   }
 
 
-  async createAll(createBillDto: CreateBillDto[]) {
+  async createAll(createBillDto: any[]) {
     try{
-      const dataBill=this.billRepository.create(createBillDto);
-
-      console.log(dataBill);
-      
-
+      let arrayOldBills=[];
+      let arrayBillToDelete=[];
       for(const x of createBillDto){
-            
-          const category= await this.categoryService.findOne(x.categoryId);
-        console.log(category);
-        
-          const updateAmount= category.amount - x.value;
+        // const category=await this.categoryService.findOne(x.categoryId);
+        // const updateAmount= category.disponible - x.value;
+        // await this.categoryService.update(x.categoryId,{disponible:updateAmount});
 
-          await this.categoryService.update(x.categoryId,{amount:updateAmount});
+        if(x.alreadyCreated && x.alreadyCreated){
+          arrayBillToDelete.push(x);
+          continue;
+        }
+        if(x.alreadyCreated){
+          arrayOldBills.push(x);
+        }
+        delete x.id;
+        const dataBill=this.billRepository.create(x);
+        await this.billRepository.save(dataBill);
       }
-
-      await this.billRepository.save(dataBill);
-      return dataBill;
+      
+      if(arrayOldBills.length > 0){
+        await this.updateAllBills(arrayOldBills);
+      }
+      if(arrayBillToDelete.length>0){
+        await this.deleteAllBills(arrayBillToDelete);
+      }
+      return true;
     }catch(err:any){
       throw err;
     }
@@ -111,6 +121,36 @@ export class BillsService {
     }
   }
 
+
+
+  
+  async updateAllBills(dataUpdated: any[]) {
+    try{
+      for(const x of dataUpdated){
+        const id=x.id;
+        const dataToUpdated= {...x};
+        delete dataToUpdated.id;
+        delete dataToUpdated.alreadyCreated;
+
+        console.log("the data id ");
+        console.log(dataToUpdated);
+
+        const {affected}= await this.billRepository.update(id,dataToUpdated);
+        if(affected==0){
+          throw new ManageError({
+            type:"NOT_FOUND",
+            message:"FAILED TO UPDATED"});
+        }
+      }
+      return {message:"Perfectly updated"};
+
+    }catch(err:any){
+      throw ManageError.signedError(err.message);
+    }
+  }
+
+
+
   async remove(id: number) {
     try{
       const {affected}:any= await this.billRepository.delete(id);
@@ -125,4 +165,39 @@ export class BillsService {
       throw ManageError.signedError(err.message);
     }
   }
+
+
+
+  
+
+  async deleteAllBills(dataToDelete: 
+    any
+  ) {
+    try{
+      for(const x of dataToDelete){
+        const {affected}:any= await this.billRepository.delete(x.id);
+
+        if(affected==0){
+          throw new ManageError({
+            type:"NOT_FOUND",
+            message:"FAILED TO DELETED"});
+        }
+        return "Perfectly deleted";
+      }
+    }catch(err:any){
+      throw ManageError.signedError(err.message);
+    }
+  }
+
+
+    async removeAllBiilWithCategoryId(categoryId: number) {
+      try{
+        const {affected}:any= await this.billRepository.delete({categoryId:categoryId});
+        return "Perfectly deleted";
+      }catch(err:any){
+        throw ManageError.signedError(err.message);
+      }
+  }
+
+
 }

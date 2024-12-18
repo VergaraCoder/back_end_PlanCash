@@ -48,18 +48,20 @@ export class CategoriesController {
   }
 
   @UseGuards(JwtGuard)
-  @Patch('final/:id')
-  updateFnal(@Param('id') id: string, @Body() updateCategoryDto: UpdateCategoryDto, @Res() response : Response) {
-    const responseData=this.categoriesService.update(+id, updateCategoryDto);
-
-    response.cookie("access_token","");
-    response.cookie("refresh_token","");
+  @Patch('final')
+  updateFnal(@Body() updateCategorysDtos: any[]) {
+    console.log("the data is ");
+    console.log(updateCategorysDtos);
+    
+    const responseData=this.categoriesService.updateAllCategories(updateCategorysDtos);
+    return responseData;
   }
 
   @UseGuards(JwtGuard)
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateCategoryDto: UpdateCategoryDto) {
-    return this.categoriesService.update(+id, updateCategoryDto);
+  async update(@Param('id') id: string, @Body() updateCategoryDto: UpdateCategoryDto) {
+    await this.FilterDataCategories.filterDataGeneral({dateStart: updateCategoryDto.dateStart, dateEnd: updateCategoryDto.dateEnd});
+    return await this.categoriesService.update(+id, updateCategoryDto);
   }
 
   @UseGuards(JwtGuard)

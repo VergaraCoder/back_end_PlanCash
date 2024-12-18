@@ -7,6 +7,7 @@ import { Category } from './entities/category.entity';
 import { Repository } from 'typeorm';
 import { BudgetService } from 'src/budget/budget.service';
 import { Budget } from 'src/budget/entities/budget.entity';
+import { BillsService } from 'src/bills/bills.service';
 
 @Injectable()
 export class CategoriesService {
@@ -14,7 +15,8 @@ export class CategoriesService {
   constructor(
     @InjectRepository(Category)
     private categoryRepository: Repository<Category>,
-    private budGetService:BudgetService
+    private budGetService:BudgetService,
+    private billService:BillsService
   ){}
 
   async create(createCategoryDto: CreateCategoryDto) {
@@ -110,8 +112,41 @@ export class CategoriesService {
     }
   }
 
+
+  async updateAllCategories(dataUpdated: any[]) {
+    try{
+      console.log("THE DATA CATEGORIES IS");
+      
+      console.log(dataUpdated);
+      
+      for(const x of dataUpdated){
+        const id=x.id;
+        const dataToUpdated= {...x};
+
+        delete dataToUpdated.id;
+        
+
+        const {affected}= await this.categoryRepository.update(id,dataToUpdated);
+        if(affected==0){
+          throw new ManageError({
+            type:"NOT_FOUND",
+            message:"FAILED TO UPDATED"});
+        }
+      }
+      return {message:"Perfectly updated"};
+
+    }catch(err:any){
+      throw ManageError.signedError(err.message);
+    }
+  }
+
+
   async remove(id: number) {
     try{
+      console.log("the id is ");
+      console.log(id);
+
+      await this.billService.removeAllBiilWithCategoryId(id);
       const {affected}= await this.categoryRepository.delete(id);
       if(affected==0){
         throw new ManageError({

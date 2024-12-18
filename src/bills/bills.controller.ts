@@ -22,7 +22,7 @@ export class BillsController {
 
   @UseGuards(JwtGuard)
   @Post()
-  async create(@Req() request:Request, @Body()createBillDto:CreateBillDto[]) {
+  async create(@Req() request:Request, @Body()createBillDto:CreateBillDto) {
     const dataBills:any=request["user"];
   
     // const data:argumentsFilterBills={userId:dataBills.userId};
@@ -30,8 +30,16 @@ export class BillsController {
 
     await this.filterBillService.filterDataGeneral({userId:dataBills.userId,categoryId:infoToFilter.categoryId,});
 
+    return this.billsService.create(createBillDto);
+  }
+
+
+  @UseGuards(JwtGuard)
+  @Post("final")
+  async createAll(@Body()createBillDto:CreateBillDto[]) {
     return this.billsService.createAll(createBillDto);
   }
+
 
   @UseGuards(JwtGuard)
   @Get("all")

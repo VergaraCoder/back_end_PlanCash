@@ -23,6 +23,9 @@ export class Category {
     @Column()
     amount:number;
 
+    @Column()
+    disponible:number;
+
     @ManyToOne(()=>Budget,budget=>budget.category,{eager:true})
     budget:Budget;
 

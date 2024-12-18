@@ -18,15 +18,15 @@ export class AuthController {
     response.cookie("acces_token",tokens.acces_token,{
       signed: true,
       httpOnly: true,      
-      secure: true,
-      sameSite: 'none',
+      //secure: true,
+      //sameSite: 'none',
     });
 
     response.cookie("refresh_token",tokens.refresh_token,{
       signed: true,
   httpOnly: true,      
-  secure: true,
-  sameSite: 'none',
+  //secure: true,
+  //sameSite: 'none',
     });
 
     

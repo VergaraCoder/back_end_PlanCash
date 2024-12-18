@@ -1,7 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { ManageError } from "src/common/errors/custom/error.custom";
-import { CategoriesService } from "src/categories/categories.service";
-import { Category } from "src/categories/entities/category.entity";
+
 
 interface argumentsFilterCreateCategory{
     dateStart:Date;

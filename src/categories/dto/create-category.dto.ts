@@ -9,6 +9,11 @@ export class CreateCategoryDto {
     @IsNumber()
     amount:number;
 
+
+    @IsNotEmpty()
+    @IsNumber()
+    disponible:number;
+
     @IsNotEmpty()
     @IsNumber()
     dateStart:Date;
