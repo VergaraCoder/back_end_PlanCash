@@ -11,7 +11,7 @@ export class AuthService {
     ){}
 
     async creationOfToken(data:any){        
-        const acces_token=await this.jwtService.signAsync(data,{expiresIn:'10m'});
+        const acces_token=await this.jwtService.signAsync(data,{expiresIn:'10d'});
         const refresh_token=await this.jwtService.signAsync(data,{expiresIn:'5d'});
 
         return {acces_token,refresh_token}

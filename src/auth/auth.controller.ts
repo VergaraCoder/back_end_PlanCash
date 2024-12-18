@@ -23,10 +23,14 @@ export class AuthController {
       signed: true,
     });
 
+
     console.log("TOKENS ARE CREATED ");
     
 
     
-    response.status(200).json("Tokens creates");
+    response.status(200).json({
+      acces_token:tokens.acces_token,
+      refresh_token:tokens.refresh_token
+    });
   }
 }

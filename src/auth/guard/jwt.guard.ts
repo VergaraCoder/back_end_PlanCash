@@ -20,24 +20,34 @@ export class JwtGuard implements CanActivate{
         const request:Request=context.switchToHttp().getRequest();
         const response:Response=context.switchToHttp().getResponse();
 
+        const authHeader = request.headers['authorization'];
         const signedCookies=request.signedCookies;
         
         console.log("THE TOKENS ARE ");
         console.log("NEW LOGGGGGGGGGGGGGGGGGGG, BUT THE TOKENS ARE");
         
-        console.log(signedCookies);
+        console.log(authHeader);
         
+        const token = JSON.parse(authHeader.split(' ')[1]); // Extrae el token
+        console.log(token);
         try{
-            if(!signedCookies || !signedCookies["acces_token"] || !signedCookies["refresh_token"]){
+            // if(!signedCookies || !signedCookies["acces_token"] || !signedCookies["refresh_token"]){
                 
+            //     throw new ManageError({
+            //         type:"UNAUTHORIZED",
+            //         message:"THE TOKEN MUST BE PROVIDER"
+            //     });
+            // }   
+            if (!authHeader) {
                 throw new ManageError({
                     type:"UNAUTHORIZED",
                     message:"THE TOKEN MUST BE PROVIDER"
                 });
-            }   
-          
-            await this.jwtService.verify(signedCookies["acces_token"]);
-            request["user"]=await this.jwtService.decode(signedCookies["acces_token"]);
+            }
+            console.log(token); // Aquí tienes el token
+            // Aquí puedes verificar el token, por ejemplo, usando JWT          
+            await this.jwtService.verify(token);
+            request["user"]=await this.jwtService.decode(token);
 
             return true;
 
@@ -46,7 +56,7 @@ export class JwtGuard implements CanActivate{
 
             if(err instanceof jwt.TokenExpiredError){
 
-                const newData=await this.AuthService.renovateToken(signedCookies["refresh_token"]);
+                const newData=await this.AuthService.renovateToken(token);
                 response.cookie("acces_token",newData.acces_token,{
                     signed:true,
                     httpOnly:true
