@@ -23,6 +23,8 @@ export class JwtGuard implements CanActivate{
         const signedCookies=request.signedCookies;
         
         console.log("THE TOKENS ARE ");
+        console.log("NEW LOGGGGGGGGGGGGGGGGGGG, BUT THE TOKENS ARE");
+        
         console.log(signedCookies);
         
         try{
