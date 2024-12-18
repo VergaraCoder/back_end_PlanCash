@@ -18,17 +18,18 @@ export class AuthController {
     response.cookie("acces_token",tokens.acces_token,{
       signed:true,
       httpOnly: true,
-            secure: true, // Necesario si usas HTTPS
             sameSite: 'lax', 
     });
 
     response.cookie("refresh_token",tokens.refresh_token,{
       signed: true,
   httpOnly: true,
-  secure: true, // Necesario si usas HTTPS
   sameSite: 'lax', 
 
     });
+
+    console.log("TOKENS ARE CREATED ");
+    
 
     
     response.status(200).json("Tokens creates");
